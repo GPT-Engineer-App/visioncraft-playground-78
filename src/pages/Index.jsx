@@ -6,7 +6,7 @@ const Index = () => {
   const { toggleColorMode } = useColorMode();
   const colorMode = useColorModeValue("light", "dark");
   const toast = useToast();
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("apiToken") || "");
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("RealVisXLV40Turbo-40");
   const [models, setModels] = useState([]);
@@ -22,18 +22,20 @@ const Index = () => {
   const predefinedPrompts = ["A beautiful landscape with mountains and rivers", "A futuristic city with flying cars", "A serene beach at sunset", "A bustling market in a medieval town", "A majestic dragon flying over a castle"];
 
   useEffect(() => {
-    // Fetch models
     fetch("https://visioncraft.top/sd/models-sdxl")
       .then((response) => response.json())
       .then((data) => setModels(data))
       .catch((error) => console.error("Error fetching models:", error));
 
-    // Fetch samplers
     fetch("https://visioncraft.top/sd/samplers")
       .then((response) => response.json())
       .then((data) => setSamplers(data))
       .catch((error) => console.error("Error fetching samplers:", error));
-  }, []);
+
+    if (token) {
+      localStorage.setItem("apiToken", token);
+    }
+  }, [token]);
 
   const handleGenerateImage = () => {
     const requestBody = {
@@ -86,10 +88,6 @@ const Index = () => {
         <Button onClick={toggleColorMode}>{colorMode === "light" ? <FaMoon /> : <FaSun />}</Button>
       </Flex>
       <Stack spacing={4}>
-        <FormControl id="token">
-          <FormLabel>API Token</FormLabel>
-          <Input type="text" value={token} onChange={(e) => setToken(e.target.value)} />
-        </FormControl>
         <FormControl id="model">
           <FormLabel>Model</FormLabel>
           <Select value={model} onChange={(e) => setModel(e.target.value)}>
