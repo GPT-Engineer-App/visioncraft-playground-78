@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, Input, Select, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Stack, Switch, Text, Textarea, useColorMode, useColorModeValue, Image, useToast } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, Input, Select, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Stack, Switch, Text, Textarea, useColorMode, useColorModeValue, Image, useToast, Spinner } from "@chakra-ui/react";
 import { FaMagic, FaMoon, FaSun } from "react-icons/fa";
 
 const Index = () => {
