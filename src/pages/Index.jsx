@@ -8,9 +8,9 @@ const Index = () => {
   const toast = useToast();
   const [token, setToken] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState("RealVisXLV40Turbo-40");
   const [models, setModels] = useState([]);
-  const [sampler, setSampler] = useState("");
+  const [sampler, setSampler] = useState("Euler a");
   const [samplers, setSamplers] = useState([]);
   const [cfgScale, setCfgScale] = useState(7);
   const [width, setWidth] = useState(1024);
@@ -22,7 +22,7 @@ const Index = () => {
 
   useEffect(() => {
     // Fetch models
-    fetch("https://visioncraft.top/sd/models-sd")
+    fetch("https://visioncraft.top/sd/models-sdxl")
       .then((response) => response.json())
       .then((data) => setModels(data))
       .catch((error) => console.error("Error fetching models:", error));
@@ -92,7 +92,7 @@ const Index = () => {
         </FormControl>
         <FormControl id="model">
           <FormLabel>Model</FormLabel>
-          <Select placeholder="Select model" value={model} onChange={(e) => setModel(e.target.value)}>
+          <Select value={model} onChange={(e) => setModel(e.target.value)}>
             {models.map((model, index) => (
               <option key={index} value={model}>
                 {model}
@@ -120,8 +120,8 @@ const Index = () => {
             }}
           >
             <option value="1024x1024">Square (1024x1024)</option>
-            <option value="1280x720">Horizontal (1280x720)</option>
-            <option value="720x1280">Vertical (720x1280)</option>
+            <option value="1024x720">Horizontal (1024x720)</option>
+            <option value="720x1024">Vertical (720x1024)</option>
           </Select>
         </FormControl>
         <FormControl display="flex" alignItems="center">
