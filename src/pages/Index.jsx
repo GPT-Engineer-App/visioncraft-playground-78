@@ -16,7 +16,9 @@ const Index = () => {
   const [width, setWidth] = useState(1024);
   const [height, setHeight] = useState(1024);
   const [advancedSettings, setAdvancedSettings] = useState(false);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [generatedImages, setGeneratedImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [numImages, setNumImages] = useState(1);
 
   const predefinedPrompts = ["A beautiful landscape with mountains and rivers", "A futuristic city with flying cars", "A serene beach at sunset", "A bustling market in a medieval town", "A majestic dragon flying over a castle"];
 
@@ -47,28 +49,34 @@ const Index = () => {
       cfg_scale: cfgScale,
     };
 
-    fetch("https://visioncraft.top/sd", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const imageUrl = `data:image/png;base64,${data.image}`;
-        setGeneratedImage(imageUrl);
+    setIsLoading(true);
+    const requests = Array.from({ length: numImages }, () =>
+      fetch("https://visioncraft.top/sd", {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }).then((response) => response.json()),
+    );
+
+    Promise.all(requests)
+      .then((responses) => {
+        const images = responses.map((data) => `data:image/png;base64,${data.image}`);
+        setGeneratedImages(images);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Error generating image:", error);
+        console.error("Error generating images:", error);
         toast({
           title: "Error",
-          description: "Failed to generate image. Please try again.",
+          description: "Failed to generate images. Please try again.",
           status: "error",
           duration: 5000,
           isClosable: true,
         });
+        setIsLoading(false);
       });
   };
 
@@ -154,12 +162,31 @@ const Index = () => {
             </FormControl>
           </Box>
         )}
-        <Button colorScheme="green" onClick={handleGenerateImage}>
+        <FormControl id="num-images" mt={4}>
+          <FormLabel>Number of Images</FormLabel>
+          <Select value={numImages} onChange={(e) => setNumImages(Number(e.target.value))}>
+            {[1, 2, 3, 4].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+        <Button colorScheme="green" onClick={handleGenerateImage} isLoading={isLoading}>
           Generate Image
         </Button>
-        {generatedImage && (
-          <Box mt={4}>
-            <Image src={generatedImage} alt="Generated" />
+        {generatedImages.length > 0 && (
+          <Box mt={4} borderWidth={1} borderRadius="md" p={4}>
+            <Heading as="h2" size="lg" mb={4}>
+              Generated Images
+            </Heading>
+            <Flex wrap="wrap" justify="center">
+              {generatedImages.map((image, index) => (
+                <Box key={index} m={2}>
+                  <Image src={image} alt={`Generated ${index + 1}`} />
+                </Box>
+              ))}
+            </Flex>
           </Box>
         )}
       </Stack>
