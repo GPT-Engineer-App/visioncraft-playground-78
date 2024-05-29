@@ -151,26 +151,24 @@ const Index = () => {
               </Select>
             </FormControl>
             <FormControl id="cfg-scale" mt={4}>
-              <FormLabel>CFG Scale</FormLabel>
-              <Slider defaultValue={7} min={3} max={15} step={1} value={cfgScale} onChange={(val) => setCfgScale(val)}>
+              <FormLabel>CFG Scale: {cfgScale}</FormLabel>
+              <Slider defaultValue={7} min={3} max={15} step={1} value={cfgScale} onChange={(val) => setCfgScale(val)} colorScheme="green">
                 <SliderTrack>
                   <SliderFilledTrack />
                 </SliderTrack>
                 <SliderThumb />
               </Slider>
-              <Text mt={2}>Value: {cfgScale}</Text>
             </FormControl>
           </Box>
         )}
         <FormControl id="num-images" mt={4}>
-          <FormLabel>Number of Images</FormLabel>
-          <Slider defaultValue={1} min={1} max={4} step={1} value={numImages} onChange={(val) => setNumImages(val)}>
+          <FormLabel>Number of Images: {numImages}</FormLabel>
+          <Slider defaultValue={1} min={1} max={4} step={1} value={numImages} onChange={(val) => setNumImages(val)} colorScheme="green">
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
             <SliderThumb />
           </Slider>
-          <Text mt={2}>Value: {numImages}</Text>
         </FormControl>
         <Button colorScheme="green" onClick={handleGenerateImage} isLoading={isLoading}>
           Generate Image
