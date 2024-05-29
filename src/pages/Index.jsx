@@ -59,12 +59,8 @@ const Index = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          setGeneratedImages([base64data]);
-        };
-        reader.readAsDataURL(new Blob([data], { type: "image/png" }));
+        const imageUrl = URL.createObjectURL(new Blob([data], { type: "image/png" }));
+        setGeneratedImages([imageUrl]);
         setIsLoading(false);
       })
       .catch((error) => {
