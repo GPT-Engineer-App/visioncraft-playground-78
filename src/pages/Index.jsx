@@ -164,13 +164,13 @@ const Index = () => {
         )}
         <FormControl id="num-images" mt={4}>
           <FormLabel>Number of Images</FormLabel>
-          <Select value={numImages} onChange={(e) => setNumImages(Number(e.target.value))}>
-            {[1, 2, 3, 4].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </Select>
+          <Slider defaultValue={1} min={1} max={4} step={1} value={numImages} onChange={(val) => setNumImages(val)}>
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+          <Text mt={2}>Value: {numImages}</Text>
         </FormControl>
         <Button colorScheme="green" onClick={handleGenerateImage} isLoading={isLoading}>
           Generate Image
