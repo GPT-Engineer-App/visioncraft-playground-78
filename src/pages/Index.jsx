@@ -18,7 +18,6 @@ const Index = () => {
   const [advancedSettings, setAdvancedSettings] = useState(false);
   const [generatedImages, setGeneratedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [numImages, setNumImages] = useState(1);
 
   const predefinedPrompts = ["A beautiful landscape with mountains and rivers", "A futuristic city with flying cars", "A serene beach at sunset", "A bustling market in a medieval town", "A majestic dragon flying over a castle"];
 
@@ -50,21 +49,18 @@ const Index = () => {
     };
 
     setIsLoading(true);
-    const requests = Array.from({ length: numImages }, () =>
-      fetch("https://visioncraft.top/sd", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      }).then((response) => response.json()),
-    );
-
-    Promise.all(requests)
-      .then((responses) => {
-        const images = responses.map((data) => `data:image/png;base64,${data.image}`);
-        setGeneratedImages(images);
+    fetch("https://visioncraft.top/sd", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const image = `data:image/png;base64,${data.image}`;
+        setGeneratedImages([image]);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -161,15 +157,7 @@ const Index = () => {
             </FormControl>
           </Box>
         )}
-        <FormControl id="num-images" mt={4}>
-          <FormLabel>Number of Images: {numImages}</FormLabel>
-          <Slider defaultValue={1} min={1} max={4} step={1} value={numImages} onChange={(val) => setNumImages(val)} colorScheme="green">
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </FormControl>
+
         <Button colorScheme="green" onClick={handleGenerateImage} isLoading={isLoading}>
           Generate Image
         </Button>
