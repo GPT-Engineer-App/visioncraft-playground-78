@@ -51,15 +51,11 @@ const Index = () => {
     setIsLoading(true);
     fetch("https://visioncraft.top/sd", {
       method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(requestBody),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        const imageUrl = URL.createObjectURL(new Blob([data], { type: "image/png" }));
+      .then((response) => response.blob())
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
         setGeneratedImages([imageUrl]);
         setIsLoading(false);
       })
