@@ -22,6 +22,10 @@ const Index = () => {
   const predefinedPrompts = ["A beautiful landscape with mountains and rivers", "A futuristic city with flying cars", "A serene beach at sunset", "A bustling market in a medieval town", "A majestic dragon flying over a castle"];
 
   useEffect(() => {
+    if (token) {
+      localStorage.setItem("apiToken", token);
+    }
+
     fetch("https://visioncraft.top/sd/models-sdxl")
       .then((response) => response.json())
       .then((data) => setModels(data))
@@ -31,11 +35,14 @@ const Index = () => {
       .then((response) => response.json())
       .then((data) => setSamplers(data))
       .catch((error) => console.error("Error fetching samplers:", error));
+  }, []);
 
-    if (token) {
-      localStorage.setItem("apiToken", token);
+  useEffect(() => {
+    const storedToken = localStorage.getItem("apiToken");
+    if (storedToken) {
+      setToken(storedToken);
     }
-  }, [token]);
+  }, []);
 
   const handleGenerateImage = () => {
     const requestBody = {
@@ -88,6 +95,10 @@ const Index = () => {
         <Button onClick={toggleColorMode}>{colorMode === "light" ? <FaMoon /> : <FaSun />}</Button>
       </Flex>
       <Stack spacing={4}>
+        <FormControl id="token">
+          <FormLabel>API Token</FormLabel>
+          <Input type="text" value={token} onChange={(e) => setToken(e.target.value)} />
+        </FormControl>
         <FormControl id="model">
           <FormLabel>Model</FormLabel>
           <Select value={model} onChange={(e) => setModel(e.target.value)}>
